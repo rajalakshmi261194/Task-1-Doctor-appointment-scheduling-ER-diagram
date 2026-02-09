@@ -1,0 +1,64 @@
+Table users {
+  id int [pk, increment]
+  name varchar
+  email varchar [unique]
+  password varchar
+  role varchar  // ADMIN | DOCTOR | PATIENT
+  created_at timestamp
+}
+
+Table doctors {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  specialization varchar
+  experience_years int
+  consultation_fee decimal
+}
+
+Table patients {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  age int
+  gender varchar
+  phone varchar
+}
+
+Table schedule_types {
+  id int [pk, increment]
+  name varchar  // Wave | Stream
+}
+
+Table availability {
+  id int [pk, increment]
+  doctor_id int [ref: > doctors.id]
+  date date
+  start_time time
+  end_time time
+  max_patients int
+  schedule_type_id int [ref: > schedule_types.id]
+}
+
+Table doctor_leaves {
+  id int [pk, increment]
+  doctor_id int [ref: > doctors.id]
+  start_date date
+  end_date date
+  reason varchar
+}
+
+Table appointments {
+  id int [pk, increment]
+  doctor_id int [ref: > doctors.id]
+  booking_user_id int [ref: > users.id]
+  appointment_date date
+  appointment_time time
+  status varchar  // BOOKED | CANCELLED | RESCHEDULED
+  schedule_type_id int [ref: > schedule_types.id]
+  created_at timestamp
+}
+
+Table appointment_patients {
+  id int [pk, increment]
+  appointment_id int [ref: > appointments.id]
+  patient_id int [ref: > patients.id]
+}
